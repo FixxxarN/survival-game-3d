@@ -41,10 +41,7 @@ public class PlayerController : MonoBehaviour
 
         if (_wallType)
         {
-            if (Input.GetKey(KeyCode.F))
-            {
-                _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, Input.GetAxis("Climb") * _climbSpeed, _rigidbody.velocity.z);
-            }
+           _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, Input.GetAxis("Climb") * _climbSpeed, _rigidbody.velocity.z);
         }
     }
 
