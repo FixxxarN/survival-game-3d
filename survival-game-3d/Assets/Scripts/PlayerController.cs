@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _wallType;
     private bool _isCrouching = false;
 
+    [SerializeField] private float _swimSpeed;
+
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -33,6 +35,15 @@ public class PlayerController : MonoBehaviour
         Jump();
         Crouch();
         Climb();
+        Swim();
+    }
+
+    private void Swim()
+    {
+        if(_rigidbody.transform.position.y <= 0.7)
+        {
+            _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, Input.GetAxis("Jump") * _swimSpeed, _rigidbody.velocity.z);
+        }
     }
 
     private void Climb()
