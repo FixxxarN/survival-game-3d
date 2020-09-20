@@ -5,11 +5,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    private float _playerMovement;
     private Rigidbody _rigidbody;
 
-
+    [SerializeField] private float _movementSpeed;
     [SerializeField] private GameObject _groundCheck;
     [SerializeField] private LayerMask _ground;
     [SerializeField] private float _groundRadius;
@@ -21,6 +19,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _wallRadius;
     [SerializeField] private float _climbSpeed;
     [SerializeField] private bool _wallType;
+    private bool _isCrouching = false;
 
     void Start()
     {
@@ -32,6 +31,7 @@ public class PlayerController : MonoBehaviour
     {
         Movement();
         Jump();
+        Crouch();
         Climb();
     }
 
@@ -39,20 +39,36 @@ public class PlayerController : MonoBehaviour
     {
         _wallType = Physics.CheckSphere(_wallCheck.transform.position, _wallRadius, _wall);
 
-        if(_wallType)
+        if (_wallType)
         {
-            if(Input.GetKey(KeyCode.F))
+            if (Input.GetKey(KeyCode.F))
             {
                 _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, Input.GetAxis("Climb") * _climbSpeed, _rigidbody.velocity.z);
             }
         }
     }
 
+    private void Crouch()
+    {
+        _isCrouching = Input.GetAxisRaw("Crouch") != 0;
+
+        if (_isCrouching)
+        {
+            _movementSpeed = 5;
+            transform.localScale = new Vector3(1, 0.5f, 1);
+        }
+        else
+        {
+            _movementSpeed = 10;
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+    }
+
     private void Jump()
     {
         _isGrounded = Physics.CheckSphere(_groundCheck.transform.position, _groundRadius, _ground);
-        
-        if(_isGrounded)
+
+        if (_isGrounded)
         {
             _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, Input.GetAxis("Jump") * _jumpHeight, _rigidbody.velocity.z);
         }
@@ -60,8 +76,8 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
-        float x = Input.GetAxisRaw("Horizontal") * _playerMovement * Time.deltaTime;
-        float z = Input.GetAxisRaw("Vertical") * _playerMovement * Time.deltaTime;
+        float x = Input.GetAxisRaw("Horizontal") * _movementSpeed * Time.deltaTime;
+        float z = Input.GetAxisRaw("Vertical") * _movementSpeed * Time.deltaTime;
 
         Vector3 desiredPosition = transform.position + (transform.right * x + transform.forward * z);
 
