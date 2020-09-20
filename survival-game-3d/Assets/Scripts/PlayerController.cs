@@ -14,9 +14,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _jumpHeight;
     [SerializeField] private bool _isGrounded;
 
+    [SerializeField] private GameObject _wallCheck;
+    [SerializeField] private LayerMask _wall;
+    [SerializeField] private float _wallRadius;
+    [SerializeField] private float _climbSpeed;
+    [SerializeField] private bool _wallType;
     private bool _isCrouching = false;
-
-
 
     void Start()
     {
@@ -29,13 +32,24 @@ public class PlayerController : MonoBehaviour
         Movement();
         Jump();
         Crouch();
+        Climb();
+    }
+
+    private void Climb()
+    {
+        _wallType = Physics.CheckSphere(_wallCheck.transform.position, _wallRadius, _wall);
+
+        if (_wallType)
+        {
+           _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, Input.GetAxis("Climb") * _climbSpeed, _rigidbody.velocity.z);
+        }
     }
 
     private void Crouch()
     {
         _isCrouching = Input.GetAxisRaw("Crouch") != 0;
 
-        if(_isCrouching)
+        if (_isCrouching)
         {
             _movementSpeed = 5;
             transform.localScale = new Vector3(1, 0.5f, 1);
@@ -50,8 +64,8 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         _isGrounded = Physics.CheckSphere(_groundCheck.transform.position, _groundRadius, _ground);
-        
-        if(_isGrounded)
+
+        if (_isGrounded)
         {
             _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, Input.GetAxis("Jump") * _jumpHeight, _rigidbody.velocity.z);
         }
