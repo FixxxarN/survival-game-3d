@@ -16,6 +16,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _jumpHeight;
     [SerializeField] private bool _isGrounded;
 
+    [SerializeField] private GameObject _wallCheck;
+    [SerializeField] private LayerMask _wall;
+    [SerializeField] private float _wallRadius;
+    [SerializeField] private float _climbSpeed;
+    [SerializeField] private bool _wallType;
+
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -26,6 +32,20 @@ public class PlayerController : MonoBehaviour
     {
         Movement();
         Jump();
+        Climb();
+    }
+
+    private void Climb()
+    {
+        _wallType = Physics.CheckSphere(_wallCheck.transform.position, _wallRadius, _wall);
+
+        if(_wallType)
+        {
+            if(Input.GetKey(KeyCode.F))
+            {
+                _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, Input.GetAxis("Climb") * _climbSpeed, _rigidbody.velocity.z);
+            }
+        }
     }
 
     private void Jump()
