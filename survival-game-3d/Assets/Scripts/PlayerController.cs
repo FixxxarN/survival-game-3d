@@ -20,6 +20,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _climbSpeed;
     [SerializeField] private bool _wallType;
     private bool _isCrouching = false;
+    private bool _isSprinting = false;
+    private float _damage = 15f;
+    public float Damage {
+        get { return _damage; }
+    }
 
     [SerializeField] private float _swimSpeed;
 
@@ -40,7 +45,7 @@ public class PlayerController : MonoBehaviour
 
     private void Swim()
     {
-        if(_rigidbody.transform.position.y <= 0.7)
+        if (_rigidbody.transform.position.y <= 0.7)
         {
             _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, Input.GetAxis("Jump") * _swimSpeed, _rigidbody.velocity.z);
         }
@@ -52,7 +57,7 @@ public class PlayerController : MonoBehaviour
 
         if (_wallType)
         {
-           _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, Input.GetAxis("Climb") * _climbSpeed, _rigidbody.velocity.z);
+            _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, Input.GetAxis("Climb") * _climbSpeed, _rigidbody.velocity.z);
         }
     }
 
@@ -67,7 +72,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            _movementSpeed = 10;
             transform.localScale = new Vector3(1, 1, 1);
         }
     }
@@ -90,5 +94,14 @@ public class PlayerController : MonoBehaviour
         Vector3 desiredPosition = transform.position + (transform.right * x + transform.forward * z);
 
         _rigidbody.MovePosition(desiredPosition);
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            _movementSpeed = 20f;
+        }
+        else
+        {
+            _movementSpeed = 10f;
+        }
     }
 }
