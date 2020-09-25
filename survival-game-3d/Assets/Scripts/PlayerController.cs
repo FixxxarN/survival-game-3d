@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody _rigidbody;
+    [SerializeField] private GameObject _playerSpawn;
 
     [SerializeField] private float _movementSpeed;
     [SerializeField] private GameObject _groundCheck;
@@ -22,7 +23,8 @@ public class PlayerController : MonoBehaviour
     private bool _isCrouching = false;
     private bool _isSprinting = false;
     private float _damage = 15f;
-    public float Damage {
+    public float Damage
+    {
         get { return _damage; }
     }
 
@@ -31,6 +33,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
+
+        _playerSpawn = GameObject.Find("PlayerSpawn");
     }
 
     // Update is called once per frame
@@ -41,6 +45,17 @@ public class PlayerController : MonoBehaviour
         Crouch();
         Climb();
         Swim();
+        Dead();
+    }
+
+    private void Dead()
+    {
+        PlayerStats stats = GetComponent<PlayerStats>();
+        if (stats.Health <= 0)
+        {
+            print("You have died!");
+            _rigidbody.gameObject.transform.position = this._playerSpawn.transform.position;
+        }
     }
 
     private void Swim()
