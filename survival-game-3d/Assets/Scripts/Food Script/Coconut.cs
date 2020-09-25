@@ -6,6 +6,7 @@ public class Coconut : MonoBehaviour
 {
     private float _hungerIncreaseValue = 20f;
     private float _thirstIncreasevalue = 10f;
+
     private void OnTriggerStay(Collider other)
     {
         if (other.tag == "Player")

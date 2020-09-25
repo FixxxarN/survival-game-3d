@@ -21,6 +21,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _wallType;
     private bool _isCrouching = false;
     private bool _isSprinting = false;
+    private float _damage = 15f;
+    public float Damage {
+        get { return _damage; }
+    }
 
     [SerializeField] private float _swimSpeed;
 

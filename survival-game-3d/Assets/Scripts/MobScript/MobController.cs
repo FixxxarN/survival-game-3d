@@ -13,7 +13,7 @@ public class MobController : MonoBehaviour
     [SerializeField] private float _idleTimer;
 
     private NavMeshAgent _agent;
-    private Rigidbody _player;
+    private GameObject _player;
     private Transform _target;
 
     private float _currentTime;
@@ -21,7 +21,9 @@ public class MobController : MonoBehaviour
     private bool _idle;
     private float _distance;
 
-    private float _playerDamage = 10f;
+    private float _mobDamage = 10f;
+
+    [SerializeField] private GameObject[] _itemDrop;
 
     private void OnEnable()
     {
@@ -34,7 +36,7 @@ public class MobController : MonoBehaviour
     {
         _mobHealth = _mobMaxHealth;
 
-        _player = GameObject.Find("Player").GetComponent<Rigidbody>();
+        _player = GameObject.Find("Player");
     }
 
     void Update()
@@ -78,14 +80,19 @@ public class MobController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        PlayerController player = _player.GetComponent<PlayerController>();
         if (other.tag == "Player")
         {
             if (Input.GetMouseButtonDown(0))
             {
-                _mobHealth -= _playerDamage;
+                _mobHealth -= player.Damage;
             }
             if (_mobHealth <= 0)
             {
+                foreach (GameObject i in _itemDrop)
+                {
+                    Instantiate(i, this.transform.position, Quaternion.identity);
+                }
                 Destroy(gameObject);
             }
         }

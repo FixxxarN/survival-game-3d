@@ -493,6 +493,9 @@ MonoBehaviour:
   _radius: 7
   _timer: 3
   _idleTimer: 5
+  _itemDrop:
+  - {fileID: 5433246952653910624, guid: bac7d7ae69246984b9084066bb128779, type: 3}
+  - {fileID: 6127444609629402113, guid: f1f87aa459e662547886c5e3e6179246, type: 3}
 --- !u!1001 &1436557561
 PrefabInstance:
   m_ObjectHideFlags: 0
