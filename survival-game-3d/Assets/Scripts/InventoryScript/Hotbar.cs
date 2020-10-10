@@ -13,7 +13,7 @@ public class Hotbar : Inventory
 
     void Start()
     {
-        selectedSlot = allSlots[0];
+        selectedSlot = _allSlots[0];
         CreateLayout();
     }
 
@@ -26,51 +26,51 @@ public class Hotbar : Inventory
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            selectedSlot = allSlots[0];
+            selectedSlot = _allSlots[0];
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            selectedSlot = allSlots[1];
+            selectedSlot = _allSlots[1];
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            selectedSlot = allSlots[2];
+            selectedSlot = _allSlots[2];
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            selectedSlot = allSlots[3];
+            selectedSlot = _allSlots[3];
         }
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            selectedSlot = allSlots[4];
+            selectedSlot = _allSlots[4];
         }
         if (Input.GetKeyDown(KeyCode.Alpha6))
         {
-            selectedSlot = allSlots[5];
+            selectedSlot = _allSlots[5];
         }
         if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            selectedSlot = allSlots[6];
+            selectedSlot = _allSlots[6];
         }
         if (Input.GetKeyDown(KeyCode.Alpha8))
         {
-            selectedSlot = allSlots[7];
+            selectedSlot = _allSlots[7];
         }
         if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            selectedSlot = allSlots[8];
+            selectedSlot = _allSlots[8];
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            selectedSlot = allSlots[9];
+            selectedSlot = _allSlots[9];
         }
     }
 
     void CreateLayout()
     {
 
-        hotbarWidth = 10 * (SlotSize + slotPaddingLeft) + slotPaddingLeft;
-        hotbarHeight = 1 * (SlotSize + slotPaddingTop) + slotPaddingTop;
+        hotbarWidth = 10 * (_slotSize + _slotPaddingLeft) + _slotPaddingLeft;
+        hotbarHeight = 1 * (_slotSize + _slotPaddingTop) + _slotPaddingTop;
 
         hotbarRect = GetComponent<RectTransform>();
 
@@ -79,21 +79,21 @@ public class Hotbar : Inventory
 
         for (int x = 0; x < 10; x++)
         {
-            GameObject newSlot = slotPrefab;
+            GameObject newSlot = _slotPrefab;
 
             RectTransform slotRect = newSlot.GetComponent<RectTransform>();
 
             newSlot.name = "Slot";
             //newSlot.transform.SetParent(this.transform);
 
-            slotRect.localPosition = new Vector3(slotPaddingLeft * (x + 1) + (SlotSize * x), -slotPaddingTop);
+            slotRect.localPosition = new Vector3(_slotPaddingLeft * (x + 1) + (_slotSize * x), -_slotPaddingTop);
 
-            slotRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, SlotSize);
-            slotRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, SlotSize);
+            slotRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _slotSize);
+            slotRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _slotSize);
 
-            allSlots.Add(newSlot);
+            _allSlots.Add(newSlot);
         }
 
-        EmptySlots = allSlots.Count;
+        EmptySlots = _allSlots.Count;
     }
 }
