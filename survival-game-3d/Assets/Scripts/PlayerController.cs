@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     private bool _isCrouching = false;
     private bool _isSprinting = false;
     private float _damage = 15f;
+    private PlayerStats _playerStats;
+
     public float Damage
     {
         get { return _damage; }
@@ -35,6 +37,8 @@ public class PlayerController : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
 
         _playerSpawn = GameObject.Find("PlayerSpawn");
+
+        _playerStats = GetComponent<PlayerStats>();
     }
 
     // Update is called once per frame
@@ -50,8 +54,7 @@ public class PlayerController : MonoBehaviour
 
     private void Dead()
     {
-        PlayerStats stats = GetComponent<PlayerStats>();
-        if (stats.Health <= 0)
+        if (_playerStats.Health <= 0)
         {
             print("You have died!");
             _rigidbody.gameObject.transform.position = this._playerSpawn.transform.position;
@@ -112,11 +115,23 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            _movementSpeed = 20f;
+            _playerStats.DecreaseStamina();
+            if (_playerStats.Stamina > 0)
+            {
+                _movementSpeed = 20f;
+            }
+            else
+            {
+                _movementSpeed = 10f;
+            }
         }
         else
         {
             _movementSpeed = 10f;
+            if(_playerStats.Stamina < 100)
+            {
+                _playerStats.IncreaseStamina();
+            }
         }
     }
 }

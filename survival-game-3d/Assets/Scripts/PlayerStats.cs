@@ -72,6 +72,24 @@ public class PlayerStats : MonoBehaviour
         _thirst -= 1.5f;
     }
 
+    public void IncreaseStamina()
+    {
+        if (_stamina < _maxStamina)
+        {
+            _stamina += 0.2f;
+            if(_stamina >= _maxStamina)
+            {
+                _stamina = _maxStamina;
+            }
+        }
+    }
+
+    public void DecreaseStamina()
+    {
+        if(_stamina > 0)
+            _stamina -= 0.1f;
+    }
+
     public void IncreaseHunger(float hunger)
     {
         if (_hunger < _maxHunger)
