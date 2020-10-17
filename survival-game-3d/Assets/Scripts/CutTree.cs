@@ -21,7 +21,8 @@ public class CutTree : MonoBehaviour
 
     void Update()
     {
-        Cut();
+        if(_isPlayerStandingNextToMe)
+            Cut();
     }
 
     private void Cut()
