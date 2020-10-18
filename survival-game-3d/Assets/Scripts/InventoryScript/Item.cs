@@ -35,7 +35,7 @@ public class Item : MonoBehaviour
 
     public int MaxSize;
 
-    public float Strength, Intellect, Agility, Stamina, Thirst;
+    public float Strength, Intellect, Agility, Stamina, Hunger, Thirst;
 
     public string ItemName;
 
@@ -45,12 +45,15 @@ public class Item : MonoBehaviour
 
     public float PositionY;
 
+    public GameObject Object;
+
     public void Use()
     {
         switch (Type)
         {
             case ItemType.Coconut:
-                Debug.Log("Used coconut");
+                GameObject.Find("Player").GetComponent<PlayerStats>().IncreaseHunger(Hunger);
+                GameObject.Find("Player").GetComponent<PlayerStats>().IncreaseThirst(Thirst);
                 break;
             case ItemType.Banana:
                 Debug.Log("Used banana");

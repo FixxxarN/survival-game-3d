@@ -74,7 +74,9 @@ public class Inventory : MonoBehaviour
                 foreach (Item item in from.Items)
                 {
                     //Fix PlayerLocalScale to know if the player is turned to right or left in both AddForce and instance.
-                    Item tempItem = Instantiate(item, GameObject.Find("Player").transform.position + new Vector3(0.2f, 0f, 0f), Quaternion.identity);
+                    GameObject tempItem = item.Object;
+                    tempItem.transform.position = GameObject.Find("Player").transform.position + new Vector3(0.2f, 0f, 0f);
+                    tempItem.gameObject.SetActive(true);
                     tempItem.GetComponent<Rigidbody>().AddForce(transform.right * 1f, ForceMode.Impulse);
                 }
                 from.ClearSlot();

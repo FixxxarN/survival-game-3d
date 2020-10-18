@@ -37,6 +37,12 @@ public class PlayerController : MonoBehaviour
     private float _damage = 15f;
     private PlayerStats _playerStats;
 
+    [SerializeField] private Inventory _inventory;
+    private InventoryHandler _inventoryHandler;
+
+    private bool _isNearAnItem = false;
+    private Item _itemNearBy = null;
+
     public float Damage
     {
         get { return _damage; }
@@ -46,6 +52,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        _inventoryHandler = new InventoryHandler();
+        
         _defaultFog = RenderSettings.fog;
         _defaultFogColor = RenderSettings.fogColor;
         _defaultFogDensity = RenderSettings.fogDensity;
@@ -65,11 +73,25 @@ public class PlayerController : MonoBehaviour
         Crouch();
         Climb();
         Dead();
+        PickUpItem();
         WaterLevel();
 
         if (_isInWater)
         {
             Swim();
+        }
+    }
+
+    private void PickUpItem()
+    {
+        if(_isNearAnItem)
+        {
+            if(Input.GetKeyDown(KeyCode.E))
+            {
+                _itemNearBy.GetComponent<Item>().Object = _itemNearBy.gameObject;
+                _inventory.AddItem(_itemNearBy);
+                _itemNearBy.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -183,6 +205,24 @@ public class PlayerController : MonoBehaviour
             {
                 _playerStats.IncreaseStamina();
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Item")
+        {
+            _isNearAnItem = true;
+            _itemNearBy = other.GetComponent<Item>();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Item")
+        {
+            _isNearAnItem = false;
+            _itemNearBy = null;
         }
     }
 }
