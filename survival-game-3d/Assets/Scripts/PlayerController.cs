@@ -5,6 +5,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private Transform _water;
+
+    private bool _defaultFog = false;
+    private Color _defaultFogColor = Color.black;
+    private float _defaultFogDensity = 0;
+
+    [SerializeField] private Color _fogColor = Color.blue;
+    [SerializeField] private float _density = 0.075f;
+
+
     private Rigidbody _rigidbody;
     [SerializeField] private GameObject _playerSpawn;
 
@@ -14,6 +24,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _groundRadius;
     [SerializeField] private float _jumpHeight;
     [SerializeField] private bool _isGrounded;
+
+    private bool _isInWater = false;
 
     [SerializeField] private GameObject _wallCheck;
     [SerializeField] private LayerMask _wall;
@@ -41,6 +53,10 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _inventoryHandler = new InventoryHandler();
+        
+        _defaultFog = RenderSettings.fog;
+        _defaultFogColor = RenderSettings.fogColor;
+        _defaultFogDensity = RenderSettings.fogDensity;
 
         _rigidbody = GetComponent<Rigidbody>();
 
@@ -56,9 +72,14 @@ public class PlayerController : MonoBehaviour
         Jump();
         Crouch();
         Climb();
-        Swim();
         Dead();
         PickUpItem();
+        WaterLevel();
+
+        if (_isInWater)
+        {
+            Swim();
+        }
     }
 
     private void PickUpItem()
@@ -74,6 +95,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void WaterLevel()
+    {
+        if (_water == null) return;
+        SetFog(transform.position.y < _water.position.y);
+        SetFog(_water.gameObject.GetComponent<Renderer>().bounds.Contains(transform.position));
+        SetFog(_water.InverseTransformPoint(transform.position).y < 0);
+    }
+
+    void SetFog(bool _underWater)
+    {
+        RenderSettings.fog = _underWater ? true : _defaultFog;
+        RenderSettings.fogColor = _underWater ? _fogColor : _defaultFogColor;
+        RenderSettings.fogDensity = _underWater ? _density : _defaultFogDensity;
+    }
+
     private void Dead()
     {
         if (_playerStats.Health <= 0)
@@ -83,11 +119,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Water")
+        {
+            _isInWater = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Water")
+        {
+            _isInWater = false;
+        }
+    }
     private void Swim()
     {
-        if (_rigidbody.transform.position.y <= 0.7)
+        if(Input.GetKey(KeyCode.Space))
         {
-            _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, Input.GetAxis("Jump") * _swimSpeed, _rigidbody.velocity.z);
+            _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, _swimSpeed, _rigidbody.velocity.z);
         }
     }
 
@@ -150,7 +201,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             _movementSpeed = 10f;
-            if(_playerStats.Stamina < 100)
+            if (_playerStats.Stamina < 100)
             {
                 _playerStats.IncreaseStamina();
             }
