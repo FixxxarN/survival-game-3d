@@ -67,8 +67,9 @@ public class PlayerController : MonoBehaviour
         {
             if(Input.GetKeyDown(KeyCode.E))
             {
+                _itemNearBy.GetComponent<Item>().Object = _itemNearBy.gameObject;
                 _inventory.AddItem(_itemNearBy);
-                Destroy(_itemNearBy.gameObject);
+                _itemNearBy.gameObject.SetActive(false);
             }
         }
     }

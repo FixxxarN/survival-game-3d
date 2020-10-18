@@ -45,6 +45,8 @@ public class Item : MonoBehaviour
 
     public float PositionY;
 
+    public GameObject Object;
+
     public void Use()
     {
         switch (Type)
