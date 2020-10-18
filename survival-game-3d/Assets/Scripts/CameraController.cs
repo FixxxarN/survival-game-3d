@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    private bool isCursorVisible = false;
+    private bool isCursorVisible = true;
 
     public float Sensitivity = 300f;
     public GameObject _player;
@@ -15,21 +15,30 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        float MouseX = Input.GetAxis("Mouse X") * Sensitivity * Time.deltaTime;
-        float MouseY = Input.GetAxis("Mouse Y") * Sensitivity * Time.deltaTime;
-
-        xRotation -= MouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        _player.transform.Rotate(Vector3.up * MouseX);
         FollowPlayer();
+
+        if (Inventory.CanvasGroup.alpha > 0)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            float MouseX = Input.GetAxis("Mouse X") * Sensitivity * Time.deltaTime;
+            float MouseY = Input.GetAxis("Mouse Y") * Sensitivity * Time.deltaTime;
+
+            xRotation -= MouseY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+            _player.transform.Rotate(Vector3.up * MouseX);
+        }
     }
 
     private void FollowPlayer()

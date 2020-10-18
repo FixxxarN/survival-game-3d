@@ -25,6 +25,12 @@ public class PlayerController : MonoBehaviour
     private float _damage = 15f;
     private PlayerStats _playerStats;
 
+    [SerializeField] private Inventory _inventory;
+    private InventoryHandler _inventoryHandler;
+
+    private bool _isNearAnItem = false;
+    private Item _itemNearBy = null;
+
     public float Damage
     {
         get { return _damage; }
@@ -34,6 +40,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        _inventoryHandler = new InventoryHandler();
+
         _rigidbody = GetComponent<Rigidbody>();
 
         _playerSpawn = GameObject.Find("PlayerSpawn");
@@ -50,6 +58,19 @@ public class PlayerController : MonoBehaviour
         Climb();
         Swim();
         Dead();
+        PickUpItem();
+    }
+
+    private void PickUpItem()
+    {
+        if(_isNearAnItem)
+        {
+            if(Input.GetKeyDown(KeyCode.E))
+            {
+                _inventory.AddItem(_itemNearBy);
+                Destroy(_itemNearBy.gameObject);
+            }
+        }
     }
 
     private void Dead()
@@ -132,6 +153,24 @@ public class PlayerController : MonoBehaviour
             {
                 _playerStats.IncreaseStamina();
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Item")
+        {
+            _isNearAnItem = true;
+            _itemNearBy = other.GetComponent<Item>();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Item")
+        {
+            _isNearAnItem = false;
+            _itemNearBy = null;
         }
     }
 }
